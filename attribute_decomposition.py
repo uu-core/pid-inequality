@@ -74,9 +74,9 @@ def computeInequaltyDecomposition(f,p,modelCSV,delimiter,indicatorColumnName,ind
         print('Warning: substituded p=0 with p=1e-20. The use of p=0 may require simplifying the function r(f,p) based on the specific function f to avoid a division by zero.')
         p = 1e-20
     stochasticMatrixGen = lambda x: stochasticMatrixFromModel(modelCSV, delimiter, indicatorColumnName, individualCountColumnName, x)
-    reduce = lambda cmp, atom: [a for a in atom if (not (any([cmp(a,b) for b in atom])))]
+    reduceAtom = lambda cmp, atom: [a for a in atom if (not (any([cmp(a,b) for b in atom])))]
     complement = lambda atom: [[b for b in AttributeColumnNameList if b not in a] for a in atom]
-    dual = lambda atom: reduce(lambda x,y: set(x) > set(y), product(*complement(atom)))
+    dual = lambda atom: [list(x) for x in reduceAtom(lambda x,y: set(x) > set(y), [list(a) for a in product(*complement(atom))])]
     powerset = lambda attr: [list(x) for x in chain.from_iterable(combinations(attr, r) for r in range(len(attr)+1))]
     def powerSetFiltered(xs):
         if xs == []:
@@ -87,13 +87,14 @@ def computeInequaltyDecomposition(f,p,modelCSV,delimiter,indicatorColumnName,ind
     atoms = [x for x in powerSetFiltered(powerset(AttributeColumnNameList)) if x != []] # construct all lattice atoms
 
     @cache
-    def fineqCupCached(atom): # memoize the cumulative measure
+    def fineqCupCached(atom): # memoize the cumulative measure (taking frozensets)
         return fineqCup(stochasticMatrixGen, f, p, [list(x) for x in atom])
-    
+    fineqCupCachedList = lambda atom : fineqCupCached(frozenset([frozenset(x) for x in atom])) # wrapper for type conversion
+
     res = []
     for atom in atoms:
-        cumulative = fineqCupCached((tuple(x) for x in atom))
-        partial = sum([(-1)**(len(beta)-1)*fineqCupCached((tuple(x) for x in reduce(lambda x,y: set(x) < set(y), beta+atom))) for beta in powerset(dual(atom))]) if atom != [AttributeColumnNameList] else 0
+        cumulative = fineqCupCachedList(atom)
+        partial = sum([(-1)**(len(beta)-1)*fineqCupCachedList(reduceAtom(lambda x,y: set(x) < set(y), beta+atom)) for beta in powerset(dual(atom))]) if atom != [AttributeColumnNameList] else 0
         res.append((atom, cumulative, partial))
     return res
 
