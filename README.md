@@ -28,7 +28,7 @@ from attribute_decomposition import computeInequaltyDecomposition, printDecompos
 f = lambda x: (x-1)**2
 
 # compute the decomposition
-result = computeInequaltyDecomposition(f, 0.4, 'model.csv', ', ', 'Indicator value','Number of individuals', ['Attribute 1', 'Attribute 2'])
+result = computeInequaltyDecomposition(f, 0.4, 'model.csv', ',', 'Indicator value','Number of individuals', ['Attribute 1', 'Attribute 2'])
 
 # print the result
 printDecompositition(result)

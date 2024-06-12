@@ -6,6 +6,7 @@ from itertools import product, chain, combinations
 
 # helper function: extract stochastic matrix from model
 def stochasticMatrixFromModel(modelCSV,delimiter,indicatorColumnName,individualCountColumnName, AttributeColumnNameList):
+    AttributeColumnNameList = list(set(AttributeColumnNameList)) # remove duplicates
     model = pd.read_csv(modelCSV,delimiter=delimiter, engine='python')
     if AttributeColumnNameList == []:
         return [(1,1)]
@@ -74,9 +75,9 @@ def computeInequaltyDecomposition(f,p,modelCSV,delimiter,indicatorColumnName,ind
         print('Warning: substituded p=0 with p=1e-20. The use of p=0 may require simplifying the function r(f,p) based on the specific function f to avoid a division by zero.')
         p = 1e-20
     stochasticMatrixGen = lambda x: stochasticMatrixFromModel(modelCSV, delimiter, indicatorColumnName, individualCountColumnName, x)
-    reduceAtom = lambda cmp, atom: [a for a in atom if (not (any([cmp(a,b) for b in atom])))]
+    reduceAtom = lambda cmp, atom: [list(set(a)) for a in atom if (not (any([cmp(a,b) for b in atom])))]
     complement = lambda atom: [[b for b in AttributeColumnNameList if b not in a] for a in atom]
-    dual = lambda atom: [list(x) for x in reduceAtom(lambda x,y: set(x) > set(y), [list(a) for a in product(*complement(atom))])]
+    dual = lambda atom: [list(x) for x in reduceAtom(lambda x,y: set(x) > set(y), [list(set(a)) for a in product(*complement(atom))])]
     powerset = lambda attr: [list(x) for x in chain.from_iterable(combinations(attr, r) for r in range(len(attr)+1))]
     def powerSetFiltered(xs):
         if xs == []:
@@ -95,6 +96,7 @@ def computeInequaltyDecomposition(f,p,modelCSV,delimiter,indicatorColumnName,ind
     for atom in atoms:
         cumulative = fineqCupCachedList(atom)
         partial = sum([(-1)**(len(beta)-1)*fineqCupCachedList(reduceAtom(lambda x,y: set(x) < set(y), beta+atom)) for beta in powerset(dual(atom))]) if atom != [AttributeColumnNameList] else 0
+        partial = round(partial,15) + 0 # round to decent precision and add zero to remove pythons 'negative zero'. 
         res.append((atom, cumulative, partial))
     return res
 
