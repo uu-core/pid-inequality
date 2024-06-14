@@ -2,7 +2,7 @@ import pandas as pd
 from functools import reduce, cache
 from itertools import product, chain, combinations
 
-# Mote: sotchastic matrices are represented as list of tuples (x,y)
+# Note: sotchastic matrices are represented as list of tuples (x,y)
 
 # helper function: extract stochastic matrix from model
 def stochasticMatrixFromModel(modelCSV,delimiter,indicatorColumnName,individualCountColumnName, AttributeColumnNameList):
