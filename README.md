@@ -16,7 +16,7 @@ _**Requirements:**_ [pandas](https://pandas.pydata.org/pandas-docs/stable/gettin
 - `modelCSV`: the CSV-file containing the system model
 - `delimiter`: the used deliminator in the CSV-file
 - `indicatorColumnName`: the column name  in the CSV-file for the indicator variable.
-- `individualCountColumnName`: the column name in the CSV-file for the number of individuals with this indicator and attributes.
+- `individualCountColumnName`: the column name in the CSV-file for the number of individuals with this indicator and attributes. Therefore and like used in the puplication examples, the total indicator value contributed by each entry/row is the given indicator value _times_ the number of individuals. To represent a subgroup as model entry/row, use the group-size in `individualCountColumnName` and use the average indicator value of the subgroup in `indicatorColumnName`.
 - `AttributeColumnNameList`: the list of column name in the CSV-file for the attributes of the decomposition.
 - `return value`: a list of tuples. Each tuple contains the atom name, cumultive and partial result.
 
