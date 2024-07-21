@@ -30,12 +30,12 @@ f = lambda x: (x-1)**2
 # compute the decomposition
 result = computeInequaltyDecomposition(f, 0.4, 'model.csv', ',', 'Indicator value','Number of individuals', ['Attribute 1', 'Attribute 2'])
 
-# print the result
+# print the result on the union-lattice representation
 printDecompositition(result)
 #               Atom               , cumulative, partial
 # [['Attribute 1', 'Attribute 2']] ,   0.589246, 0.000000
-#        [['Attribute 2']]         ,   0.299376, 0.117162
-#        [['Attribute 1']]         ,   0.360000, 0.056538
-#[['Attribute 1'], ['Attribute 2']],   0.416538, 0.172708
-#               [[]]               ,   0.000000, 0.242838
+#        [['Attribute 2']]         ,   0.299376, 0.117162 <- Unique A1
+#        [['Attribute 1']]         ,   0.360000, 0.056538 <- Unique A2
+#[['Attribute 1'], ['Attribute 2']],   0.416538, 0.172708 <- Synergetic
+#               [[]]               ,   0.000000, 0.242838 <- Redundant
 ```
