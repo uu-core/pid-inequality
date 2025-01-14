@@ -1,7 +1,7 @@
 # pid-inequality
 
 This repository provides an implementation of the method in:
-- Tobias Mages and Christian Rohner. _Quantifying Redundancies and Synergies with Measures of Inequality_ https://doi.org/10.48550/arXiv.2407.04415 _(preprint)_
+- Mages T, Rohner C (2024) _Quantifying redundancies and synergies with measures of inequality._ PLOS ONE 19(11): e0313281. https://doi.org/10.1371/journal.pone.0313281
 
 ## Overview
 - `demo.py`: provides a simple usage example
